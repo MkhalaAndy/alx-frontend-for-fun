@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Markdown to HTML Converter
+Markdown to HTML Converters
 """
 
 import sys
