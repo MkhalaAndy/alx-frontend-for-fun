@@ -27,54 +27,62 @@ def convert_md_to_html(input_file, output_file):
         md_content = f.readlines()
 
     html_content = []
-    inside_list = False
-    inside_paragraph = False
+    inside_ul = False
+    inside_ol = False
+    inside_p = False
 
     def close_list():
-        nonlocal inside_list
-        if inside_list:
-            html_content.append('</ul>\n' if inside_list == 'ul' else '</ol>\n')
-            inside_list = False
+        nonlocal inside_ul, inside_ol
+        if inside_ul:
+            html_content.append('</ul>\n')
+            inside_ul = False
+        if inside_ol:
+            html_content.append('</ol>\n')
+            inside_ol = False
+
+    def close_paragraph():
+        nonlocal inside_p
+        if inside_p:
+            html_content.append('</p>\n')
+            inside_p = False
 
     for line in md_content:
         # Check if the line is a heading
         match = re.match(r'^(#{1,6}) (.+)', line)
         if match:
             close_list()
+            close_paragraph()
             h_level = len(match.group(1))
             h_content = match.group(2)
             html_content.append(f'<h{h_level}>{h_content}</h{h_level}>\n')
-            inside_paragraph = False
         # Check if the line is an unordered list item
         elif re.match(r'^- (.+)', line):
-            if inside_list != 'ul':
+            if not inside_ul:
                 close_list()
+                close_paragraph()
                 html_content.append('<ul>\n')
-                inside_list = 'ul'
+                inside_ul = True
             item_content = re.sub(r'^- (.+)', r'\1', line)
             html_content.append(f'<li>{item_content}</li>\n')
-            inside_paragraph = False
         # Check if the line is an ordered list item
         elif re.match(r'^\* (.+)', line):
-            if inside_list != 'ol':
+            if not inside_ol:
                 close_list()
+                close_paragraph()
                 html_content.append('<ol>\n')
-                inside_list = 'ol'
+                inside_ol = True
             item_content = re.sub(r'^\* (.+)', r'\1', line)
             html_content.append(f'<li>{item_content}</li>\n')
-            inside_paragraph = False
         # Check if the line is a blank line
         elif line.strip() == '':
             close_list()
-            if inside_paragraph:
-                html_content.append('</p>\n')
-                inside_paragraph = False
+            close_paragraph()
         # Handle paragraph text
         else:
             close_list()
-            if not inside_paragraph:
+            if not inside_p:
                 html_content.append('<p>\n')
-                inside_paragraph = True
+                inside_p = True
             paragraph_content = line.strip()
             # Replace bold syntax
             paragraph_content = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', paragraph_content)
@@ -86,8 +94,7 @@ def convert_md_to_html(input_file, output_file):
             paragraph_content = re.sub(r'\(\((.+?)\)\)', lambda x: x.group(1).replace('c', '').replace('C', ''), paragraph_content)
             html_content.append(paragraph_content + '<br/>\n')
 
-    if inside_paragraph:
-        html_content.append('</p>\n')
+    close_paragraph()
     close_list()
 
     # Write the HTML content to the output file
