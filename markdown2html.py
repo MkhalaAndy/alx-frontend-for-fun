@@ -47,6 +47,7 @@ def convert_md_to_html(input_file, output_file):
             inside_p = False
 
     for line in md_content:
+        line = line.rstrip()
         # Check if the line is a heading
         match = re.match(r'^(#{1,6}) (.+)', line)
         if match:
@@ -79,10 +80,12 @@ def convert_md_to_html(input_file, output_file):
             close_paragraph()
         # Handle paragraph text
         else:
-            close_list()
             if not inside_p:
+                close_list()
                 html_content.append('<p>\n')
                 inside_p = True
+            else:
+                html_content.append('<br/>\n')
             paragraph_content = line.strip()
             # Replace bold syntax
             paragraph_content = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', paragraph_content)
@@ -92,7 +95,7 @@ def convert_md_to_html(input_file, output_file):
             paragraph_content = re.sub(r'\[\[(.+?)\]\]', lambda x: hashlib.md5(x.group(1).encode()).hexdigest(), paragraph_content)
             # Remove 'c' and 'C' from the content
             paragraph_content = re.sub(r'\(\((.+?)\)\)', lambda x: x.group(1).replace('c', '').replace('C', ''), paragraph_content)
-            html_content.append(paragraph_content + '<br/>\n')
+            html_content.append(paragraph_content)
 
     close_paragraph()
     close_list()
