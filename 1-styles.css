@@ -1,30 +1,20 @@
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+h2 a {
+  text-decoration: none;
+  position: relative;
+  color: #8a153a;
 }
 
-h2 {
-    margin: 10px 5px;
-    position: relative;
-}
-
-a {
-    text-decoration: none;
-    color: #8a153a;
-}
-
-a::before {
-    content: "";
-    position: absolute;
-    text-decoration: none;
-    background-color: #8a153a;
-    height: 3px;
-    transform: translateY(2.2ex);
-    transition: .5s ease-out;
-    transform-origin: left;
+h2 a::before {
+  content: "";
+  bottom: 0;
+  width: 0;
+  height: 0.1rem;
+  position: absolute;
+  transition: 0.9s cubic-bezier(0.17, 0.67, 0, 1.01);
 }
 
 a:hover::before {
-    width: 9.5ch;
+  left: 0;
+  background-color: #8a153a;
+  width: 100%;
 }
