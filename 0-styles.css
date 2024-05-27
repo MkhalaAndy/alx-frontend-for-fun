@@ -1,49 +1,37 @@
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html, body {
-    height: 100vh;
-    font-weight: bold;
-    font-size: 1.5rem;
-}
-
 ul {
-    display: grid;
-    place-items: center;
-    list-style: none;
-    height: 100vh;
-    width: 100%;
-    grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: center;
 }
 
 li {
-    border: 2.5px solid #727272;
-    background-color: #f7f7f7;
-    border-radius: 10px;
-    width: 300px;
-    height: 550px;
-    display: grid;
-    place-items: center;
-    grid-template-rows: 1fr 2.5fr;
+  background-color: #f7f7f7;
+  list-style: none;
+  text-align: center;
+  border: 2px solid gray;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  padding-top: 10px;
+  font-size: 2rem;
 }
 
-span {
-    height:  100%;
-    width: 220px;
-    padding: 50px;
+.icon {
+  display: inline-block;
+  background-image: url("./0-sprite.png");
+  background-repeat: no-repeat;
+  height: 400px;
+  width: 300px;
 }
 
-span.i-html {
-    background: url('0-sprite.png') no-repeat -30px -40px;
+li span.i-html {
+  background-position: left center;
 }
 
-span.i-css {
-    background: url('0-sprite.png') no-repeat -320px -40px;
+li span.i-css {
+  background-position: center;
 }
 
-span.i-js {
-    background: url('0-sprite.png') no-repeat -610px -40px;
+li span.i-js {
+  background-position: right center;
 }
